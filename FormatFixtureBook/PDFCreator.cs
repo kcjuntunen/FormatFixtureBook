@@ -44,7 +44,7 @@ namespace FormatFixtureBook {
 		private static int count_pages(LinkedList<PageInfo> docs) {
 			int total = 0;
 			var nd_ = docs.First;
-			while (docs != null) {
+			while (nd_ != null) {
 				PdfReader rdr_ = new PdfReader(nd_.Value.fileInfo.FullName);
 				total += rdr_.NumberOfPages;
 				nd_ = nd_.Next;
@@ -65,7 +65,8 @@ namespace FormatFixtureBook {
 					while (nd_ != null) {
 						using (PdfReader rdr_ = new PdfReader(nd_.Value.fileInfo.FullName)) {
 							var sn_ = nd_.Value.FirstSheetNo();
-							int pg_ = 0;
+							var descr_ = nd_.Value.FirstDescription();
+							int pg_ = 1;
 							while (sn_ != null) {
 								document_page_counter++;
 								PdfImportedPage ip_ = copy.GetImportedPage(rdr_, pg_++);
@@ -84,13 +85,13 @@ namespace FormatFixtureBook {
 									ip_.Width < ip_.Height ? 0 : 1);
 								ps_.AlterContents();
 								sn_ = sn_.Next;
-
+								descr_ = descr_.Next;
 								copy.AddPage(ip_);
 							}
 						}
 						nd_ = nd_.Next;
-						document.Close();
 					}
+					document.Close();
 					return ms.GetBuffer();
 				}
 			}
