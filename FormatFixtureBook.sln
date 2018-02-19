@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormatFixtureBook", "FormatFixtureBook\FormatFixtureBook.csproj", "{FD193DBB-F840-4B92-AB64-EF16449AE76D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormatFixtureBookTests", "ExcelReaderTest\FormatFixtureBookTests.csproj", "{0F32D40C-3BD4-46F5-A275-F0888140CB7A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FD193DBB-F840-4B92-AB64-EF16449AE76D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD193DBB-F840-4B92-AB64-EF16449AE76D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD193DBB-F840-4B92-AB64-EF16449AE76D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD193DBB-F840-4B92-AB64-EF16449AE76D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F32D40C-3BD4-46F5-A275-F0888140CB7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F32D40C-3BD4-46F5-A275-F0888140CB7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F32D40C-3BD4-46F5-A275-F0888140CB7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F32D40C-3BD4-46F5-A275-F0888140CB7A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B52A3A28-F9C6-4B16-894F-8592365EA6CE}
+	EndGlobalSection
+EndGlobal
