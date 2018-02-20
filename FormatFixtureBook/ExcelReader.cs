@@ -9,8 +9,10 @@ namespace FormatFixtureBook
 	public class ExcelReader
 	{
 		private FileInfo xlsFileInfo;
-		private const string initialDir = @"G:\ZALES\FIXTURE BOOK\SECTIONS";
+		private string initialDir = @"G:\ZALES\FIXTURE BOOK\SECTIONS";
 		private LinkedList<PageInfo> subSections;
+
+		public string Extension = @"SLDDRW";
 
 		public ExcelReader() {
 			SelectFile();
@@ -18,6 +20,7 @@ namespace FormatFixtureBook
 
 		public ExcelReader(string _fileName) {
 			xlsFileInfo = new FileInfo(_fileName);
+			initialDir = string.Format(@"{0}\..", xlsFileInfo.DirectoryName);
 		}
 
 		private void SelectFile() {
@@ -28,6 +31,7 @@ namespace FormatFixtureBook
 
 			if (ofd_.ShowDialog() == DialogResult.OK) {
 				xlsFileInfo = new FileInfo(ofd_.FileName);
+				initialDir = string.Format(@"{0}\..", xlsFileInfo.DirectoryName);
 			}
 		}
 
@@ -50,14 +54,16 @@ namespace FormatFixtureBook
 						if (cell1_ != string.Empty) {
 							currentPageInfo = new PageInfo(cell1_, cell2_, cell3_);
 							foreach (string dir_ in Directory.GetDirectories(initialDir)) {
-								string [] f_ = Directory.GetFiles(dir_, string.Format(@"FB.{0}.SLDDRW", cell1_));
+								string [] f_ = Directory.GetFiles(dir_, string.Format(@"FB.{0}.{1}", cell1_, Extension));
 								if (f_.Length > 0) {
 									currentPageInfo.fileInfo = new FileInfo(f_[0]);
+									break;
 								} else {
-									string fn_ = string.Format(@"{0}\{1}.SLDDRW", dir_, cell3_);
-									FileInfo fi_ = new FileInfo(fn_);
-									if (fi_.Exists)
-										currentPageInfo.fileInfo = fi_;
+									string[] f3_ = Directory.GetFiles(dir_, string.Format(@"{0}.{1}", cell3_, Extension));
+									if (f3_.Length > 0) {
+										currentPageInfo.fileInfo = new FileInfo(f3_[0]);
+										break;
+									}
 								}
 							}
 							subSections.AddLast(currentPageInfo);
