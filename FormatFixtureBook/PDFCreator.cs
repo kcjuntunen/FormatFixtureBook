@@ -57,9 +57,14 @@ namespace FormatFixtureBook {
 				using (MemoryStream ms = new MemoryStream()) {
 					PdfCopy copy = new PdfCopy(document, ms);
 					document.Open();
-					int document_page_counter = 0;
 					int total_pages = count_pages(ll);
-					int font_size = 31;
+
+					Rectangle sheet_number_blockhout_ = new Rectangle(1062, 17, 1180, 110);
+					sheet_number_blockhout_.BackgroundColor = BaseColor.WHITE;
+					Rectangle revisions_blockout_ = new Rectangle(817, 17, 1032, 110);
+					revisions_blockout_.BackgroundColor = BaseColor.WHITE;
+					Rectangle item_descr_blockout_ = new Rectangle(605, 17, 787, 110);
+					item_descr_blockout_.BackgroundColor = BaseColor.WHITE;
 
 					var nd_ = ll.First;
 					while (nd_ != null) {
@@ -67,22 +72,48 @@ namespace FormatFixtureBook {
 							var sn_ = nd_.Value.FirstSheetNo();
 							var descr_ = nd_.Value.FirstDescription();
 							int pg_ = 1;
+							int document_page_counter = 0;
 							while (sn_ != null) {
-								document_page_counter++;
 								PdfImportedPage ip_ = copy.GetImportedPage(rdr_, pg_++);
 								PdfCopy.PageStamp ps_ = copy.CreatePageStamp(ip_);
 								PdfContentByte cb_ = ps_.GetOverContent();
-								Rectangle r_ = new Rectangle(720, 20, 47, 16);
-								r_.BackgroundColor = BaseColor.WHITE;
-								cb_.Rectangle(r_);
-								Font f_ = FontFactory.GetFont(@"Arial", font_size);
-								Chunk c_ = new Chunk(sn_.Value.ToString(), f_);
-								c_.SetBackground(BaseColor.WHITE);
+								cb_.Rectangle(sheet_number_blockhout_);
+								cb_.Rectangle(revisions_blockout_);
+								cb_.Rectangle(item_descr_blockout_);
+
+								Font sheet_number_font_ = FontFactory.GetFont(@"Arial", 31);
+								Chunk sheet_number_ = new Chunk(sn_.Value.ToString(), sheet_number_font_);
+								sheet_number_.SetBackground(BaseColor.WHITE);
 								ColumnText.ShowTextAligned(cb_,
 									Element.ALIGN_CENTER,
-									new Phrase(c_),
-									20, 20,
-									ip_.Width < ip_.Height ? 0 : 1);
+									new Phrase(sheet_number_),
+									1127, 60,
+									0);
+
+
+								Font item_font_ = FontFactory.GetFont(@"Century Gothic", 15, Font.BOLD);
+								string item_name_ = string.Format("{0}", nd_.Value.Name);
+								Chunk item_ = new Chunk(item_name_, item_font_);
+								sheet_number_.SetBackground(BaseColor.WHITE);
+								ColumnText.ShowTextAligned(cb_,
+									Element.ALIGN_CENTER,
+									new Phrase(item_),
+									700, 60,
+									0);
+
+								Font item_descr_font_ = FontFactory.GetFont(@"Century Gothic", 10, Font.BOLD);
+								string desc_ = string.Format(@"{0}", descr_.Value);
+								if (document_page_counter++ > 0 && rdr_.NumberOfPages > 1) {
+									desc_ = string.Format(@"SEE SHEET {0}", nd_.Value.FirstSheetNo().Value);
+								}
+								Chunk item_descr_ = new Chunk(desc_, item_descr_font_);
+								sheet_number_.SetBackground(BaseColor.WHITE);
+								ColumnText.ShowTextAligned(cb_,
+									Element.ALIGN_CENTER,
+									new Phrase(item_descr_),
+									700, 50,
+									0);
+
 								ps_.AlterContents();
 								sn_ = sn_.Next;
 								descr_ = descr_.Next;
