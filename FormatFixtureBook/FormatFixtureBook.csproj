@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExcelReader.cs" />
+    <Compile Include="ExcelReaderException.cs" />
     <Compile Include="PageInfo.cs" />
     <Compile Include="PDFCreator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

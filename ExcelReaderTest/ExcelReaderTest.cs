@@ -66,5 +66,29 @@ namespace ExcelReaderTest {
 				nd_ = nd_.Next;
 			}
 		}
+
+		public void ConstructBadReader() {
+			ExcelReader er_ = new ExcelReader(@"G:\ZALES\FIXTURE BOOK\SECTIONS\SECTION 5\Section 5.csv");
+		}
+
+		[TestMethod]
+		public void WrongExtensionExceptionTest() {
+			System.Action badReader = ConstructBadReader;
+			Assert.ThrowsException<ExcelReaderException>((System.Action)ConstructBadReader);
+		}
+
+		public void ReadOpenFile() {
+			ExcelReader er_ = new ExcelReader(@"G:\ZALES\FIXTURE BOOK\SECTIONS\SECTION 5\Section 5.xlsx");
+			var ll_ = er_.ReadFile();
+		}
+
+		[TestMethod]
+		public void FileOpenExceptionTest() {
+			Microsoft.Office.Interop.Excel.Application x_ = new Microsoft.Office.Interop.Excel.Application();
+			x_.Workbooks.Open(@"G:\ZALES\FIXTURE BOOK\SECTIONS\SECTION 5\Section 5.xlsx");
+			Assert.ThrowsException<ExcelReaderException>((System.Action)ReadOpenFile);
+			x_.Workbooks.Close();
+			System.Runtime.InteropServices.Marshal.ReleaseComObject(x_);
+		}
 	}
 }
