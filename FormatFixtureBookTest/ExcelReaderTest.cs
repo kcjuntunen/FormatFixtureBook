@@ -2,7 +2,7 @@
 using FormatFixtureBook;
 using System.Diagnostics;
 
-namespace ExcelReaderTest {
+namespace FormatFixtureBookTests {
 	[TestClass]
 	public class ExcelReaderTest {
 		[TestMethod]

@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SolidWorks.Interop.sldworks;
 #endif
 
-namespace ExcelReaderTest {
+namespace FormatFixtureBookTests {
 	[TestClass]
 	public class PDFCreatorTest {
 		[TestMethod]

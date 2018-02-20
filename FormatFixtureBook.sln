@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormatFixtureBook", "FormatFixtureBook\FormatFixtureBook.csproj", "{FD193DBB-F840-4B92-AB64-EF16449AE76D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormatFixtureBookTests", "ExcelReaderTest\FormatFixtureBookTests.csproj", "{0F32D40C-3BD4-46F5-A275-F0888140CB7A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormatFixtureBookTests", "FormatFixtureBookTest\FormatFixtureBookTests.csproj", "{0F32D40C-3BD4-46F5-A275-F0888140CB7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
