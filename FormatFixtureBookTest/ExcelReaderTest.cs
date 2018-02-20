@@ -7,7 +7,9 @@ namespace FormatFixtureBookTests {
 	public class ExcelReaderTest {
 		[TestMethod]
 		public void RootTest() {
-			ExcelReader er_ = new ExcelReader(@"G:\ZALES\FIXTURE BOOK\SECTIONS\All.xlsx");
+			ExcelReader er_ = new ExcelReader(@"G:\ZALES\FIXTURE BOOK\SECTIONS\All.xlsx",
+				ExcelReader.ExcelReaderExtensionOptions.SLDDRW,
+				ExcelReader.ExcelReaderSearchOptions.THIS_DIR);
 
 			var ll_ = er_.ReadFile();
 			var nd_ = ll_.First;
@@ -28,7 +30,9 @@ namespace FormatFixtureBookTests {
 
 		[TestMethod]
 		public void SubTest() {
-			ExcelReader er_ = new ExcelReader(@"G:\ZALES\FIXTURE BOOK\SECTIONS\SECTION 1\Section 1.xlsx");
+			ExcelReader er_ = new ExcelReader(@"G:\ZALES\FIXTURE BOOK\SECTIONS\SECTION 1\Section 1.xlsx",
+				ExcelReader.ExcelReaderExtensionOptions.SLDDRW,
+				ExcelReader.ExcelReaderSearchOptions.PARENT_DIR);
 
 			var ll_ = er_.ReadFile();
 			var nd_ = ll_.First;
@@ -49,7 +53,9 @@ namespace FormatFixtureBookTests {
 
 		[TestMethod]
 		public void OtherSubTest() {
-			ExcelReader er_ = new ExcelReader(@"G:\ZALES\FIXTURE BOOK\SECTIONS\SECTION 5\Section 5.xlsx");
+			ExcelReader er_ = new ExcelReader(@"G:\ZALES\FIXTURE BOOK\SECTIONS\SECTION 5\Section 5.xlsx",
+				ExcelReader.ExcelReaderExtensionOptions.SLDDRW,
+				ExcelReader.ExcelReaderSearchOptions.PARENT_DIR);
 
 			var ll_ = er_.ReadFile();
 			var nd_ = ll_.First;

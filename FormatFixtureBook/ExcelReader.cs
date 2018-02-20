@@ -22,7 +22,8 @@ namespace FormatFixtureBook
 
 		public enum ExcelReaderSearchOptions {
 			PARENT_DIR = 0x02,
-			TEMP_DIR = 0x04
+			TEMP_DIR = 0x04,
+			THIS_DIR = 0x08
 		}
 
 		public ExcelReader() {
@@ -43,7 +44,6 @@ namespace FormatFixtureBook
 		
 		public ExcelReader(string _fileName, ExcelReaderExtensionOptions _eo, ExcelReaderSearchOptions _so) {
 			xlsFileInfo = new FileInfo(_fileName);
-			initialDir = string.Format(@"{0}\..", xlsFileInfo.DirectoryName);
 			extOpt = _eo;
 			searchOpt = _so;
 			set_options();
@@ -59,7 +59,12 @@ namespace FormatFixtureBook
 			}
 
 			if ((searchOpt & ExcelReaderSearchOptions.PARENT_DIR) == ExcelReaderSearchOptions.PARENT_DIR) {
+				initialDir = string.Format(@"{0}\..", xlsFileInfo.DirectoryName);
+			}
 
+
+			if ((searchOpt & ExcelReaderSearchOptions.THIS_DIR) == ExcelReaderSearchOptions.THIS_DIR) {
+				initialDir = string.Format(@"{0}\", xlsFileInfo.DirectoryName);
 			}
 
 			if ((searchOpt & ExcelReaderSearchOptions.TEMP_DIR) == ExcelReaderSearchOptions.TEMP_DIR) {
@@ -87,7 +92,10 @@ namespace FormatFixtureBook
 				foreach (string dir_ in Directory.GetDirectories(initialDir)) {
 					currentPageInfo.fileInfo = search(cell1_, cell3_, dir_);
 				}
+			} else if ((searchOpt & ExcelReaderSearchOptions.THIS_DIR) == ExcelReaderSearchOptions.THIS_DIR) {
+				currentPageInfo.fileInfo = search(cell1_, cell3_, sDir_);
 			} else if ((searchOpt & ExcelReaderSearchOptions.TEMP_DIR) == ExcelReaderSearchOptions.TEMP_DIR) {
+				sDir_ = string.Format(@"{0}\", Path.GetTempPath());
 				currentPageInfo.fileInfo = search(cell1_, cell3_, sDir_);
 			}
 			return currentPageInfo;
@@ -117,19 +125,23 @@ namespace FormatFixtureBook
 						subSections = new LinkedList<PageInfo>();
 					}
 
+					string tmp_ = string.Empty;
+
 					for (int i = 2; i <= rows_; i++) {
 						string cell1_ = Convert.ToString(wksht_.Cells[i, 1].Value).Trim();
 						string cell2_ = Convert.ToString(wksht_.Cells[i, 2].Value).Trim();
 						string cell3_ = Convert.ToString(wksht_.Cells[i, 3].Value).Trim();
 
 						if (cell1_ != string.Empty) {
+							tmp_ = cell1_;
 							currentPageInfo = find_file(cell1_, cell2_, cell3_);
+							currentPageInfo.Name = tmp_;
 							subSections.AddLast(currentPageInfo);
 						} else if (cell2_ != string.Empty && cell3_ != string.Empty) {
 							currentPageInfo.Add(cell2_, cell3_);
+							currentPageInfo.Name = tmp_;
+							//subSections.AddLast(currentPageInfo);
 						}
-
-
 					}
 				}
 			} catch (IOException _ioe) {
