@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.IO;
+using System.Collections.Generic;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swconst;
 using iTextSharp.text;
@@ -7,7 +8,21 @@ using iTextSharp.text.pdf;
 
 namespace FormatFixtureBook {
 	public class PDFCreator {
-		public static void CreateDrawings(SldWorks _swApp, LinkedList<PageInfo> _ll) {
+		public PDFCreator() {
+
+		}
+
+		public event EventHandler Opening;
+		protected virtual void OnOpening(FileSystemEventArgs e) {
+			Opening?.Invoke(this, e);
+		}
+
+		public event EventHandler Closing;
+		protected virtual void OnClosing(FileSystemEventArgs e) {
+			Closing?.Invoke(this, e);
+		}
+
+		public void CreateDrawings(SldWorks _swApp, LinkedList<PageInfo> _ll) {
 			int dt = (int)swDocumentTypes_e.swDocDRAWING;
 			int err = 0;
 			int warn = 0;
@@ -21,11 +36,15 @@ namespace FormatFixtureBook {
 				FileInfo slddrw_ = nd_.Value.fileInfo;
 				string newName = slddrw_.Name.Replace(@".SLDDRW", @".PDF");
 				FileInfo tmpFile = new FileInfo(string.Format(@"{0}\{1}", Path.GetTempPath(), newName));
+				FileSystemEventArgs fsea_ =
+					new FileSystemEventArgs(WatcherChangeTypes.All, Path.GetDirectoryName(tmpFile.FullName), tmpFile.Name);
+				OnOpening(fsea_);
 				_swApp.OpenDocSilent(slddrw_.FullName, dt, ref err);
 				_swApp.ActivateDoc3(slddrw_.FullName, true, 
 					(int)swRebuildOnActivation_e.swDontRebuildActiveDoc, ref err);
 				success = (_swApp.ActiveDoc as ModelDoc2).SaveAs4(tmpFile.FullName, saveVersion, saveOptions, ref err, ref warn);
 				nd_.Value.fileInfo = tmpFile;
+				OnClosing(fsea_);
 				_swApp.CloseDoc(slddrw_.FullName);
 				nd_ = nd_.Next;
 			}

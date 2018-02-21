@@ -16,8 +16,10 @@ namespace FormatFixtureBook
 		private ExcelReaderSearchOptions searchOpt;
 		private bool foundFileFlag = false;
 
-		public delegate string SearchingNewDir(string str);
-		event SearchingNewDir OnNewDir;
+		public event EventHandler NewDir;
+		protected virtual void OnNewDir(FileSystemEventArgs e) {
+			NewDir?.Invoke(this, e);
+		}
 
 		public enum ExcelReaderExtensionOptions {
 			SLDDRW = 0x02,
@@ -95,14 +97,17 @@ namespace FormatFixtureBook
 			bool VendorInfo_ = false;
 			if ((searchOpt & ExcelReaderSearchOptions.RECURSE) == ExcelReaderSearchOptions.RECURSE) {
 				foreach (string dir_ in Directory.GetDirectories(initialDir)) {
-					OnNewDir(dir_);
+					OnNewDir(new FileSystemEventArgs(WatcherChangeTypes.All, dir_, xlsFileInfo.FullName));
 					currentPageInfo.fileInfo = search(cell1_, cell3_, dir_, ref VendorInfo_);
+					if (currentPageInfo.fileInfo != null) {
+						break;
+					}
 				}
 			} else if ((searchOpt & ExcelReaderSearchOptions.THIS_DIR) == ExcelReaderSearchOptions.THIS_DIR) {
-				OnNewDir(sDir_);
+				OnNewDir(new FileSystemEventArgs(WatcherChangeTypes.All, sDir_, xlsFileInfo.Name));
 				currentPageInfo.fileInfo = search(cell1_, cell3_, sDir_, ref VendorInfo_);
 			} else if ((searchOpt & ExcelReaderSearchOptions.TEMP_DIR) == ExcelReaderSearchOptions.TEMP_DIR) {
-				OnNewDir(sDir_);
+				OnNewDir(new FileSystemEventArgs(WatcherChangeTypes.All, sDir_, xlsFileInfo.Name));
 				sDir_ = string.Format(@"{0}\", Path.GetTempPath());
 				currentPageInfo.fileInfo = search(cell1_, cell3_, sDir_, ref VendorInfo_);
 			}

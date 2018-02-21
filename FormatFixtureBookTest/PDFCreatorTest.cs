@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using FormatFixtureBook;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 #if LONG_TESTS
 using SolidWorks.Interop.sldworks;
 #endif
@@ -28,7 +27,9 @@ namespace FormatFixtureBookTests {
 			} catch (System.Runtime.InteropServices.COMException e) {
 				System.Console.WriteLine(e.Message);
 			}
-			PDFCreator.CreateDrawings(swApp_, ll_);
+			PDFCreator p = new PDFCreator();
+			p.CreateDrawings(swApp_, ll_);
+
 			var nd_ = ll_.First;
 			while (nd_ != null) {
 				nd_.Value.fileInfo = new FileInfo(nd_.Value.fileInfo.FullName.Replace(@".SLDDRW", @".PDF"));
