@@ -90,30 +90,41 @@ namespace FormatFixtureBook {
 									1127, 60,
 									0);
 
+								if (nd_.Value.VendorInfo) {
+									Font item_descr_font_ = FontFactory.GetFont(@"Tw Cen MT", 17, Font.BOLD);
+									string desc_ = @"VENDOR INFO";
+									Chunk item_descr_ = new Chunk(desc_, item_descr_font_);
+									sheet_number_.SetBackground(BaseColor.WHITE);
+									ColumnText.ShowTextAligned(cb_,
+										Element.ALIGN_CENTER,
+										new Phrase(item_descr_),
+										700, 60,
+										0);
 
-								Font item_font_ = FontFactory.GetFont(@"Century Gothic", 15, Font.BOLD);
-								string item_name_ = string.Format("{0}", nd_.Value.Name);
-								Chunk item_ = new Chunk(item_name_, item_font_);
-								sheet_number_.SetBackground(BaseColor.WHITE);
-								ColumnText.ShowTextAligned(cb_,
-									Element.ALIGN_CENTER,
-									new Phrase(item_),
-									700, 60,
-									0);
+								} else {
+									Font item_font_ = FontFactory.GetFont(@"Tw Cen MT", 17, Font.BOLD);
+									string item_name_ = string.Format("{0}", nd_.Value.Name);
+									Chunk item_ = new Chunk(item_name_, item_font_);
+									sheet_number_.SetBackground(BaseColor.WHITE);
+								 ColumnText.ShowTextAligned(cb_,
+									 Element.ALIGN_CENTER,
+									 new Phrase(item_),
+									 700, 68,
+									 0);
 
-								Font item_descr_font_ = FontFactory.GetFont(@"Century Gothic", 10, Font.BOLD);
-								string desc_ = string.Format(@"{0}", descr_.Value);
-								if (document_page_counter++ > 0 && rdr_.NumberOfPages > 1) {
-									desc_ = string.Format(@"SEE SHEET {0}", nd_.Value.FirstSheetNo().Value);
+									Font item_descr_font_ = FontFactory.GetFont(@"Tw Cen MT", 12, Font.BOLD);
+									string desc_ = string.Format(@"{0}", descr_.Value);
+									if (document_page_counter++ > 0 && rdr_.NumberOfPages > 1) {
+										desc_ = string.Format(@"SEE SHEET {0}", nd_.Value.FirstSheetNo().Value);
+									}
+									Chunk item_descr_ = new Chunk(desc_, item_descr_font_);
+									sheet_number_.SetBackground(BaseColor.WHITE);
+									ColumnText.ShowTextAligned(cb_,
+										Element.ALIGN_CENTER,
+										new Phrase(item_descr_),
+										700, 50,
+										0);
 								}
-								Chunk item_descr_ = new Chunk(desc_, item_descr_font_);
-								sheet_number_.SetBackground(BaseColor.WHITE);
-								ColumnText.ShowTextAligned(cb_,
-									Element.ALIGN_CENTER,
-									new Phrase(item_descr_),
-									700, 50,
-									0);
-
 								ps_.AlterContents();
 								sn_ = sn_.Next;
 								descr_ = descr_.Next;

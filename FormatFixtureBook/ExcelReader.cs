@@ -14,6 +14,10 @@ namespace FormatFixtureBook
 		private string extension = @"SLDDRW";
 		private ExcelReaderExtensionOptions extOpt;
 		private ExcelReaderSearchOptions searchOpt;
+		private bool foundFileFlag = false;
+
+		public delegate string SearchingNewDir(string str);
+		event SearchingNewDir OnNewDir;
 
 		public enum ExcelReaderExtensionOptions {
 			SLDDRW = 0x02,
@@ -23,7 +27,8 @@ namespace FormatFixtureBook
 		public enum ExcelReaderSearchOptions {
 			PARENT_DIR = 0x02,
 			TEMP_DIR = 0x04,
-			THIS_DIR = 0x08
+			THIS_DIR = 0x08,
+			RECURSE = 0x10
 		}
 
 		public ExcelReader() {
@@ -87,27 +92,34 @@ namespace FormatFixtureBook
 		private PageInfo find_file(string cell1_, string cell2_, string cell3_) {
 			PageInfo currentPageInfo = new PageInfo(cell1_, cell2_, cell3_);
 			string sDir_ = xlsFileInfo.DirectoryName;
-			if ((searchOpt & ExcelReaderSearchOptions.PARENT_DIR) == ExcelReaderSearchOptions.PARENT_DIR) {
-				sDir_ = string.Format(@"{0}\..", sDir_);
+			bool VendorInfo_ = false;
+			if ((searchOpt & ExcelReaderSearchOptions.RECURSE) == ExcelReaderSearchOptions.RECURSE) {
 				foreach (string dir_ in Directory.GetDirectories(initialDir)) {
-					currentPageInfo.fileInfo = search(cell1_, cell3_, dir_);
+					OnNewDir(dir_);
+					currentPageInfo.fileInfo = search(cell1_, cell3_, dir_, ref VendorInfo_);
 				}
 			} else if ((searchOpt & ExcelReaderSearchOptions.THIS_DIR) == ExcelReaderSearchOptions.THIS_DIR) {
-				currentPageInfo.fileInfo = search(cell1_, cell3_, sDir_);
+				OnNewDir(sDir_);
+				currentPageInfo.fileInfo = search(cell1_, cell3_, sDir_, ref VendorInfo_);
 			} else if ((searchOpt & ExcelReaderSearchOptions.TEMP_DIR) == ExcelReaderSearchOptions.TEMP_DIR) {
+				OnNewDir(sDir_);
 				sDir_ = string.Format(@"{0}\", Path.GetTempPath());
-				currentPageInfo.fileInfo = search(cell1_, cell3_, sDir_);
+				currentPageInfo.fileInfo = search(cell1_, cell3_, sDir_, ref VendorInfo_);
 			}
+			currentPageInfo.VendorInfo = VendorInfo_;
 			return currentPageInfo;
 		}
 
-		private FileInfo search(string termA, string termB, string dir) {
+		private FileInfo search(string termA, string termB, string dir, ref bool VendorInfo) {
 			string[] f_ = Directory.GetFiles(dir, string.Format(@"FB.{0}.{1}", termA, extension));
 			if (f_.Length > 0) {
+				foundFileFlag = true;
 				return new FileInfo(f_[0]);
 			} else {
 				string[] f3_ = Directory.GetFiles(dir, string.Format(@"{0}.{1}", termB, extension));
 				if (f3_.Length > 0) {
+					foundFileFlag = true;
+					VendorInfo = true;
 					return new FileInfo(f3_[0]);
 				}
 			}
@@ -146,6 +158,12 @@ namespace FormatFixtureBook
 				}
 			} catch (IOException _ioe) {
 				throw new ExcelReaderException(@"Could not read file.\nIs it open in another window?", _ioe);
+			}
+			if (!foundFileFlag) {
+				throw new ExcelReaderFoundNoFilesException(
+					"Couldn't find any files.\n" +
+					"Try checking the \"Recursive\" box or move\n" +
+					"the Excel file to the same directory as the drawings.");
 			}
 			return subSections;
 		}

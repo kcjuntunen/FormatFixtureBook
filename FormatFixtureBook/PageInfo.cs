@@ -7,6 +7,7 @@ namespace FormatFixtureBook {
 		private LinkedList<string> pageDescription;
 		private LinkedList<string> sheetNo;
 		public string Name;
+		public bool VendorInfo;
 		public FileInfo fileInfo;
 
 		public PageInfo(string itm_grp, string pg_descr, string shtNo) {
