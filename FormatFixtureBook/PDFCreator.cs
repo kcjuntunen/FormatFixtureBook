@@ -51,12 +51,17 @@ namespace FormatFixtureBook {
 		}
 
 		public static void Merge(LinkedList<PageInfo> _ll, FileInfo _target) {
-			byte[] ba = merge_files(_ll);
-			using (FileStream fs = File.Create(_target.FullName)) {
-				for (int i = 0; i < ba.Length; i++) {
-					fs.WriteByte(ba[i]);
+			try {
+				byte[] ba = merge_files(_ll);
+				using (FileStream fs = File.Create(_target.FullName)) {
+					for (int i = 0; i < ba.Length; i++) {
+						fs.WriteByte(ba[i]);
+					}
+					fs.Close();
 				}
-				fs.Close();
+			} catch (IOException ioe) {
+				throw new PDFCreatorFileOpenException(
+					string.Format(@"Could not save file to '{0}'. Do you have it open?", _target.Name));
 			}
 		}
 
