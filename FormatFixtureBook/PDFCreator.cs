@@ -33,20 +33,22 @@ namespace FormatFixtureBook {
 			var nd_ = _ll.First;
 
 			while (nd_ != null) {
-				FileInfo slddrw_ = nd_.Value.fileInfo;
-				string newName = slddrw_.Name.Replace(@".SLDDRW", @".PDF");
-				FileInfo tmpFile = new FileInfo(string.Format(@"{0}\{1}", Path.GetTempPath(), newName));
-				FileSystemEventArgs fsea_ =
-					new FileSystemEventArgs(WatcherChangeTypes.All, Path.GetDirectoryName(tmpFile.FullName), tmpFile.Name);
-				OnOpening(fsea_);
-				_swApp.OpenDocSilent(slddrw_.FullName, dt, ref err);
-				_swApp.ActivateDoc3(slddrw_.FullName, true, 
-					(int)swRebuildOnActivation_e.swDontRebuildActiveDoc, ref err);
-				success = (_swApp.ActiveDoc as ModelDoc2).SaveAs4(tmpFile.FullName, saveVersion, saveOptions, ref err, ref warn);
-				nd_.Value.fileInfo = tmpFile;
-				OnClosing(fsea_);
-				_swApp.CloseDoc(slddrw_.FullName);
-				nd_ = nd_.Next;
+				if (nd_.Value.fileInfo != null) {
+					FileInfo slddrw_ = nd_.Value.fileInfo;
+					string newName = slddrw_.Name.Replace(@".SLDDRW", @".PDF");
+					FileInfo tmpFile = new FileInfo(string.Format(@"{0}\{1}", Path.GetTempPath(), newName));
+					FileSystemEventArgs fsea_ =
+						new FileSystemEventArgs(WatcherChangeTypes.All, Path.GetDirectoryName(tmpFile.FullName), tmpFile.Name);
+					OnOpening(fsea_);
+					_swApp.OpenDocSilent(slddrw_.FullName, dt, ref err);
+					_swApp.ActivateDoc3(slddrw_.FullName, true,
+						(int)swRebuildOnActivation_e.swDontRebuildActiveDoc, ref err);
+					success = (_swApp.ActiveDoc as ModelDoc2).SaveAs4(tmpFile.FullName, saveVersion, saveOptions, ref err, ref warn);
+					nd_.Value.fileInfo = tmpFile;
+					OnClosing(fsea_);
+					_swApp.CloseDoc(slddrw_.FullName);
+					nd_ = nd_.Next;
+				}
 			}
 		}
 
