@@ -64,8 +64,10 @@ namespace FormatFixtureBook {
 			int total = 0;
 			var nd_ = docs.First;
 			while (nd_ != null) {
-				PdfReader rdr_ = new PdfReader(nd_.Value.fileInfo.FullName);
-				total += rdr_.NumberOfPages;
+				if (nd_.Value.fileInfo != null) {
+					PdfReader rdr_ = new PdfReader(nd_.Value.fileInfo.FullName);
+					total += rdr_.NumberOfPages;
+				}
 				nd_ = nd_.Next;
 			}
 			return total;
@@ -87,6 +89,10 @@ namespace FormatFixtureBook {
 
 					var nd_ = ll.First;
 					while (nd_ != null) {
+						if (nd_.Value.fileInfo == null) {
+							nd_ = nd_.Next;
+							continue;
+						}
 						using (PdfReader rdr_ = new PdfReader(nd_.Value.fileInfo.FullName)) {
 							var sn_ = nd_.Value.FirstSheetNo();
 							var descr_ = nd_.Value.FirstDescription();
