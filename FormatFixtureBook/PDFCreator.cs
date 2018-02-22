@@ -91,6 +91,10 @@ namespace FormatFixtureBook {
 					revisions_blockout_.BackgroundColor = BaseColor.WHITE;
 					Rectangle item_descr_blockout_ = new Rectangle(605, 17, 787, 110);
 					item_descr_blockout_.BackgroundColor = BaseColor.WHITE;
+					Rectangle item_textarea_ = new Rectangle(605, 78, 787, 110);
+					item_textarea_.BackgroundColor = BaseColor.WHITE;
+					Rectangle item_descr_textarea_ = new Rectangle(605, 17, 787, 78);
+					item_descr_textarea_.BackgroundColor = BaseColor.WHITE;
 
 					var nd_ = ll.First;
 					while (nd_ != null) {
@@ -130,17 +134,16 @@ namespace FormatFixtureBook {
 										new Phrase(item_descr_),
 										700, 60,
 										0);
-
 								} else {
 									Font item_font_ = FontFactory.GetFont(@"Tw Cen MT", 17, Font.BOLD);
 									string item_name_ = string.Format("{0}", nd_.Value.Name);
 									Chunk item_ = new Chunk(item_name_, item_font_);
 									sheet_number_.SetBackground(BaseColor.WHITE);
-								 ColumnText.ShowTextAligned(cb_,
-									 Element.ALIGN_CENTER,
-									 new Phrase(item_),
-									 700, 68,
-									 0);
+									ColumnText item_column_ = new ColumnText(cb_);
+									item_column_.SetSimpleColumn(item_textarea_);
+									item_column_.SetText(new Phrase(item_));
+									item_column_.Alignment = Element.ALIGN_CENTER;
+									item_column_.Go();
 
 									Font item_descr_font_ = FontFactory.GetFont(@"Tw Cen MT", 12, Font.BOLD);
 									string desc_ = string.Format(@"{0}", descr_.Value);
@@ -148,12 +151,12 @@ namespace FormatFixtureBook {
 										desc_ = string.Format(@"SEE SHEET {0}", nd_.Value.FirstSheetNo().Value);
 									}
 									Chunk item_descr_ = new Chunk(desc_, item_descr_font_);
-									sheet_number_.SetBackground(BaseColor.WHITE);
-									ColumnText.ShowTextAligned(cb_,
-										Element.ALIGN_CENTER,
-										new Phrase(item_descr_),
-										700, 50,
-										0);
+									Phrase ph_ = new Phrase(item_descr_);
+									ColumnText item_descr_column_ = new ColumnText(cb_);
+									item_descr_column_.SetSimpleColumn(item_descr_textarea_);
+									item_descr_column_.SetText(ph_);
+									item_descr_column_.Alignment = Element.ALIGN_CENTER;
+									item_descr_column_.Go();
 								}
 								ps_.AlterContents();
 								sn_ = sn_.Next;
