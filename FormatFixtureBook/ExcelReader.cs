@@ -208,7 +208,9 @@ namespace FormatFixtureBook
 			} catch (IOException _ioe) {
 				throw new ExcelReaderException(@"Could not read file.\nIs it open in another window?", _ioe);
 			}
-			post_search();
+			if (extension == @"PDF") {
+				post_search();
+			}
 			if (!foundFileFlag) {
 					throw new ExcelReaderFoundNoFilesException(
 						"Couldn't find any files.\n" +
