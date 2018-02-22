@@ -35,11 +35,13 @@ namespace FormatFixtureBookTests {
 #if LONG_TESTS
 		[TestMethod]
 		public void CreateAndMergePDFsFromSection1Test() {
-			ExcelReader er_ = new ExcelReader(@"C:\Users\juntunenkc\Desktop\pdf test\Section 1.xlsx");
+			ExcelReader er_ = new ExcelReader(@"C:\Users\juntunenkc\Desktop\pdf test\Section 1.xlsx",
+				ExcelReader.ExcelReaderExtensionOptions.SLDDRW,
+				ExcelReader.ExcelReaderSearchOptions.THIS_DIR);
 			var ll_ = er_.ReadFile();
 			SldWorks swApp_ = null;
 			try {
-				swApp_ = System.Runtime.InteropServices.Marshal.GetActiveObject(@"SldWorks.Application") as SldWorks;
+				swApp_ = System.Runtime.InteropServices.Marshal.GetActiveObject(@"SldWorks.Application." + v++) as SldWorks;
 			} catch (System.Runtime.InteropServices.COMException e) {
 				System.Console.WriteLine(e.Message);
 			}

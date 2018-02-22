@@ -7,7 +7,7 @@ namespace FormatFixtureBookTests {
 	public class ExcelReaderTest {
 		[TestMethod]
 		public void RootTest() {
-			ExcelReader er_ = new ExcelReader(@"G:\ZALES\FIXTURE BOOK\SECTIONS\All.xlsx",
+			ExcelReader er_ = new ExcelReader(@"G:\ZALES\FIXTURE BOOK\SECTIONS\Section 4.xlsx",
 				ExcelReader.ExcelReaderExtensionOptions.SLDDRW,
 				ExcelReader.ExcelReaderSearchOptions.THIS_DIR | ExcelReader.ExcelReaderSearchOptions.RECURSE);
 
