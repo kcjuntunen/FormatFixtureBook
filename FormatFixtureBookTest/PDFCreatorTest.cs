@@ -13,7 +13,15 @@ namespace FormatFixtureBookTests {
 			ExcelReader er_ = new ExcelReader(@"C:\Users\juntunenkc\Desktop\pdf test\Section 1.xlsx",
 				ExcelReader.ExcelReaderExtensionOptions.PDF, ExcelReader.ExcelReaderSearchOptions.THIS_DIR);
 			var ll_ = er_.ReadFile();
-			PDFCreator.Merge(ll_, new FileInfo(@"C:\Users\juntunenkc\Desktop\pdf test\test.pdf"));
+			PDFCreator.Merge(ll_, new FileInfo(@"C:\Users\juntunenkc\Desktop\pdf test\test1.pdf"));
+		}
+
+		[TestMethod]
+		public void MergePDFsFromSection5Test() {
+			ExcelReader er_ = new ExcelReader(@"G:\ZALES\FIXTURE BOOK\SECTIONS\SECTION 5\Section 5.xlsx",
+				ExcelReader.ExcelReaderExtensionOptions.PDF, ExcelReader.ExcelReaderSearchOptions.THIS_DIR);
+			var ll_ = er_.ReadFile();
+			PDFCreator.Merge(ll_, new FileInfo(@"C:\Users\juntunenkc\Desktop\pdf test\test5.pdf"));
 		}
 
 		[TestMethod]
