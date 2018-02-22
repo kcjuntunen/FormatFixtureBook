@@ -78,6 +78,7 @@
     <Compile Include="ExcelReaderFoundNoFilesException.cs" />
     <Compile Include="PageInfo.cs" />
     <Compile Include="PDFCreator.cs" />
+    <Compile Include="PDFCreatorFileOpenException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
