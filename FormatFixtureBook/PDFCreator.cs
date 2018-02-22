@@ -110,6 +110,10 @@ namespace FormatFixtureBook {
 							int pg_ = 1;
 							int document_page_counter = 0;
 							while (sn_ != null) {
+								if (pg_ > rdr_.NumberOfPages) {
+									sn_ = sn_.Next;
+									continue;
+								}
 								PdfImportedPage ip_ = copy.GetImportedPage(rdr_, pg_++);
 								PdfCopy.PageStamp ps_ = copy.CreatePageStamp(ip_);
 								PdfContentByte cb_ = ps_.GetOverContent();
