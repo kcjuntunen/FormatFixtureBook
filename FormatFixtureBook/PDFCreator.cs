@@ -22,7 +22,7 @@ namespace FormatFixtureBook {
 			Closing?.Invoke(this, e);
 		}
 
-		public void CreateDrawings(SldWorks _swApp, LinkedList<PageInfo> _ll) {
+		public LinkedList<PageInfo> CreateDrawings(SldWorks _swApp, LinkedList<PageInfo> _ll) {
 			int dt = (int)swDocumentTypes_e.swDocDRAWING;
 			int err = 0;
 			int warn = 0;
@@ -40,16 +40,23 @@ namespace FormatFixtureBook {
 					FileSystemEventArgs fsea_ =
 						new FileSystemEventArgs(WatcherChangeTypes.All, Path.GetDirectoryName(tmpFile.FullName), tmpFile.Name);
 					OnOpening(fsea_);
-					_swApp.OpenDocSilent(slddrw_.FullName, dt, ref err);
-					_swApp.ActivateDoc3(slddrw_.FullName, true,
-						(int)swRebuildOnActivation_e.swDontRebuildActiveDoc, ref err);
-					success = (_swApp.ActiveDoc as ModelDoc2).SaveAs4(tmpFile.FullName, saveVersion, saveOptions, ref err, ref warn);
-					nd_.Value.fileInfo = tmpFile;
-					OnClosing(fsea_);
-					_swApp.CloseDoc(slddrw_.FullName);
-					nd_ = nd_.Next;
+					if (slddrw_.FullName.ToUpper().EndsWith(@"SLDDRW")) {
+						_swApp.OpenDocSilent(slddrw_.FullName, dt, ref err);
+						_swApp.ActivateDoc3(slddrw_.FullName, true,
+							(int)swRebuildOnActivation_e.swDontRebuildActiveDoc, ref err);
+						DrawingDoc dd_ = (DrawingDoc)_swApp.ActiveDoc;
+						ModelDoc2 md_ = (ModelDoc2)_swApp.ActiveDoc;
+						if (md_ != null) {
+							success = md_.SaveAs4(tmpFile.FullName, saveVersion, saveOptions, ref err, ref warn);
+						}
+						nd_.Value.fileInfo = tmpFile;
+						OnClosing(fsea_);
+						_swApp.CloseDoc(slddrw_.FullName);
+					}
 				}
+				nd_ = nd_.Next;
 			}
+			return _ll;
 		}
 
 		public static void Merge(LinkedList<PageInfo> _ll, FileInfo _target) {
