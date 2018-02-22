@@ -154,6 +154,23 @@ namespace FormatFixtureBook
 			return null;
 		}
 
+		private void post_search() {
+			var nd_ = subSections.First;
+			while (nd_ != null) {
+				if (nd_.Value.fileInfo == null) {
+					string first = nd_.Value.FirstSheetNo().Value;
+					string last = nd_.Value.LastSheetNo().Value;
+					string f_ = string.Format(@"{0} - {1}", first, last.Replace(@"Z ", string.Empty));
+					PageInfo pi_ = find_file(string.Empty, string.Empty, f_);
+					if (pi_.fileInfo != null && pi_.fileInfo.Exists) {
+						nd_.Value.fileInfo = pi_.fileInfo;
+						foundFileFlag = true;
+					}
+				}
+				nd_ = nd_.Next;
+			}
+		}
+
 		public LinkedList<PageInfo> ReadFile() {
 			try {
 				using (ExcelPackage xlp_ = new ExcelPackage(xlsFileInfo)) {
@@ -166,6 +183,7 @@ namespace FormatFixtureBook
 					}
 
 					string tmp_ = string.Empty;
+					string range_ = string.Empty;
 
 					for (int i = 2; i <= rows_; i++) {
 						string cell1_ = Convert.ToString(wksht_.Cells[i, 1].Value).Trim();
@@ -174,12 +192,15 @@ namespace FormatFixtureBook
 
 						if (cell1_ != string.Empty) {
 							tmp_ = cell1_;
+							range_ = wksht_.Cells[i, 1, i, 3].Address;
 							currentPageInfo = find_file(cell1_, cell2_, cell3_);
 							currentPageInfo.Name = tmp_;
+							currentPageInfo.CellAddress = range_;
 							subSections.AddLast(currentPageInfo);
 						} else if (cell2_ != string.Empty && cell3_ != string.Empty) {
 							currentPageInfo.Add(cell2_, cell3_);
 							currentPageInfo.Name = tmp_;
+							currentPageInfo.CellAddress = range_;
 							//subSections.AddLast(currentPageInfo);
 						}
 					}
@@ -187,12 +208,13 @@ namespace FormatFixtureBook
 			} catch (IOException _ioe) {
 				throw new ExcelReaderException(@"Could not read file.\nIs it open in another window?", _ioe);
 			}
+			post_search();
 			if (!foundFileFlag) {
-				throw new ExcelReaderFoundNoFilesException(
-					"Couldn't find any files.\n" +
-					"Try checking the \"Recursive\" box or move\n" +
-					"the Excel file to the same directory as the drawings.");
-			}
+					throw new ExcelReaderFoundNoFilesException(
+						"Couldn't find any files.\n" +
+						"Try checking the \"Recursive\" box or move\n" +
+						"the Excel file to the same directory as the drawings.");
+				}
 			return subSections;
 		}
 	}

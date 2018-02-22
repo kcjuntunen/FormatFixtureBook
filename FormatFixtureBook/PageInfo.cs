@@ -9,6 +9,7 @@ namespace FormatFixtureBook {
 		public string Name;
 		public bool VendorInfo;
 		public FileInfo fileInfo;
+		public string CellAddress = string.Empty;
 
 		public PageInfo(string itm_grp, string pg_descr, string shtNo) {
 			itemGroup = itm_grp;
@@ -28,8 +29,16 @@ namespace FormatFixtureBook {
 			return pageDescription.First;
 		}
 
+		public LinkedListNode<string> LastDescription() {
+			return pageDescription.Last;
+		}
+
 		public LinkedListNode<string> FirstSheetNo() {
 			return sheetNo.First;
+		}
+		
+		public LinkedListNode<string> LastSheetNo() {
+			return sheetNo.Last;
 		}
 	}
 }
