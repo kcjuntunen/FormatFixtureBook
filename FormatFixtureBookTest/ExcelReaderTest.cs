@@ -122,5 +122,27 @@ namespace FormatFixtureBookTests {
 		private void Er__NewDir(object sender, System.EventArgs e) {
 			testString += (e as System.IO.FileSystemEventArgs).FullPath;
 		}
+
+		[TestMethod]
+		public void GetCellAddresses() {
+			ExcelReader er_ = new ExcelReader(@"G:\ZALES\FIXTURE BOOK\SECTIONS\SECTION 5\Section 5.xlsx",
+			 ExcelReader.ExcelReaderExtensionOptions.PDF,
+			 ExcelReader.ExcelReaderSearchOptions.PARENT_DIR | ExcelReader.ExcelReaderSearchOptions.RECURSE);
+			var ll_ = er_.ReadFile();
+			var nd_ = ll_.First;
+			System.Collections.Generic.List<string> f_ = new System.Collections.Generic.List<string>();
+			System.Collections.Generic.List<string> nf_ = new System.Collections.Generic.List<string>();
+			while (nd_ != null) {
+				if (nd_.Value.fileInfo != null)
+					f_.Add(string.Format(@"{0}: {1}", nd_.Value.Name, nd_.Value.CellAddress));
+				else 
+					nf_.Add(string.Format(@"{0}: {1}", nd_.Value.Name, nd_.Value.CellAddress));
+
+				nd_ = nd_.Next;
+			}
+			foreach (var item in f_) {
+				System.Console.WriteLine(item);
+			}
+		}
 	}
 }
