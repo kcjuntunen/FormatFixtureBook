@@ -37,23 +37,45 @@ namespace FormatFixtureBook
 			SelectFile();
 			extOpt = ExcelReaderExtensionOptions.SLDDRW;
 			searchOpt = ExcelReaderSearchOptions.PARENT_DIR;
+			set_options();
 		}
 
 		public ExcelReader(string _fileName) {
 			xlsFileInfo = new FileInfo(_fileName);
 			initialDir = string.Format(@"{0}\..", xlsFileInfo.DirectoryName);
-			if (_fileName.ToUpper().EndsWith(@"XLS") || _fileName.ToUpper().EndsWith(@"XLSX")) {
-				set_options();
-			} else {
-				throw new ExcelReaderException(@"Unable to read non-Excel documents.");
-			}
+			validate(xlsFileInfo);
+			set_options();
+		}
+
+		public ExcelReader(FileInfo fileInfo) {
+			xlsFileInfo = fileInfo;
+			initialDir = string.Format(@"{0}\..", xlsFileInfo.DirectoryName);
+			validate(fileInfo);
+			set_options();
 		}
 		
 		public ExcelReader(string _fileName, ExcelReaderExtensionOptions _eo, ExcelReaderSearchOptions _so) {
 			xlsFileInfo = new FileInfo(_fileName);
 			extOpt = _eo;
 			searchOpt = _so;
+			validate(xlsFileInfo);
 			set_options();
+		}
+
+		public ExcelReader(FileInfo fileInfo, ExcelReaderExtensionOptions _eo, ExcelReaderSearchOptions _so) {
+			xlsFileInfo = fileInfo;
+			extOpt = _eo;
+			searchOpt = _so;
+			validate(xlsFileInfo);
+			set_options();
+		}
+
+		private void validate(FileInfo fileInfo) {
+			if (fileInfo.Name.ToUpper().EndsWith(@"XLS") || fileInfo.Name.ToUpper().EndsWith(@"XLSX")) {
+				set_options();
+			} else {
+				throw new ExcelReaderException(@"Unable to read non-Excel documents.");
+			}
 		}
 
 		private void set_options() {
@@ -88,6 +110,7 @@ namespace FormatFixtureBook
 			if (ofd_.ShowDialog() == DialogResult.OK) {
 				xlsFileInfo = new FileInfo(ofd_.FileName);
 				initialDir = string.Format(@"{0}\..", xlsFileInfo.DirectoryName);
+				validate(xlsFileInfo);
 			}
 		}
 
